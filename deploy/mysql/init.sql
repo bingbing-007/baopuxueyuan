@@ -98,6 +98,70 @@ CREATE TABLE IF NOT EXISTS bp_enrollment (
   CONSTRAINT fk_enrollment_course FOREIGN KEY (course_id) REFERENCES bp_course(id)
 );
 
+
+-- ===== Exam =====
+
+CREATE TABLE IF NOT EXISTS bp_exam (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  course_id BIGINT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  duration_minutes INT NOT NULL DEFAULT 30,
+  pass_score INT NOT NULL DEFAULT 60,
+  total_score INT NOT NULL DEFAULT 100,
+  status TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS bp_question (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  type VARCHAR(20) NOT NULL DEFAULT 'single',
+  stem TEXT NOT NULL,
+  options JSON NULL,
+  answer VARCHAR(500) NOT NULL,
+  explanation TEXT NULL,
+  score INT NOT NULL DEFAULT 5,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS bp_exam_question (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  exam_id BIGINT NOT NULL,
+  question_id BIGINT NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_exam_q (exam_id, question_id),
+  CONSTRAINT fk_eq_exam FOREIGN KEY (exam_id) REFERENCES bp_exam(id),
+  CONSTRAINT fk_eq_question FOREIGN KEY (question_id) REFERENCES bp_question(id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_exam_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  exam_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  score INT NOT NULL DEFAULT 0,
+  passed TINYINT NOT NULL DEFAULT 0,
+  started_at DATETIME NOT NULL,
+  submitted_at DATETIME NULL,
+  KEY idx_user (user_id),
+  CONSTRAINT fk_record_exam FOREIGN KEY (exam_id) REFERENCES bp_exam(id),
+  CONSTRAINT fk_record_user FOREIGN KEY (user_id) REFERENCES bp_user(id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_exam_answer (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  record_id BIGINT NOT NULL,
+  question_id BIGINT NOT NULL,
+  user_answer VARCHAR(500) NULL,
+  correct TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_record_q (record_id, question_id),
+  CONSTRAINT fk_answer_record FOREIGN KEY (record_id) REFERENCES bp_exam_record(id),
+  CONSTRAINT fk_answer_question FOREIGN KEY (question_id) REFERENCES bp_question(id)
+);
 -- ===== Seed data =====
 
 INSERT IGNORE INTO bp_tenant (id, name, code) VALUES (1, '抱朴学院', 'baopu');
@@ -127,3 +191,4 @@ ON DUPLICATE KEY UPDATE
   duration_minutes = VALUES(duration_minutes),
   price = VALUES(price),
   status = VALUES(status);
+
