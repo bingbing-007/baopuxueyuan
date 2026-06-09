@@ -101,6 +101,24 @@ CREATE TABLE IF NOT EXISTS bp_enrollment (
 
 
 
+
+-- ===== Knowledge Base (企业知识库) =====
+
+CREATE TABLE IF NOT EXISTS bp_knowledge_article (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  title VARCHAR(255) NOT NULL,
+  content LONGTEXT NULL,
+  summary VARCHAR(500) NULL,
+  tags VARCHAR(500) NULL,
+  category VARCHAR(64) NOT NULL DEFAULT '通用',
+  author_id BIGINT NULL,
+  view_count INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FULLTEXT KEY ft_title_content (title, content, tags)
+);
 -- ===== Credit System (学分体系) =====
 
 CREATE TABLE IF NOT EXISTS bp_credit_rule (
@@ -284,6 +302,7 @@ ON DUPLICATE KEY UPDATE
   duration_minutes = VALUES(duration_minutes),
   price = VALUES(price),
   status = VALUES(status);
+
 
 
 
