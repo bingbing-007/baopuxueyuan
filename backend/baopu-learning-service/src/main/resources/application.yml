@@ -27,3 +27,4 @@ baopu:
     app-secret: ${DINGTALK_APP_SECRET:}
     corp-id: ${DINGTALK_CORP_ID:}
     agent-id: ${DINGTALK_AGENT_ID:0}
+
