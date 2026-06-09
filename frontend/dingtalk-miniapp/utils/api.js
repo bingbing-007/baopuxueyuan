@@ -37,7 +37,22 @@ function put(p, d) {
 module.exports = {
   login: function (d) { return post("/api/auth/dingtalk/login", d); },
   listCourses: function () { return get("/api/courses"); },
+  getCourseDetail: function (id) { return get("/api/courses/" + id); },
   getDashboard: function () { return get("/api/me/dashboard"); },
   enrollCourse: function (id) { return post("/api/courses/" + id + "/enroll"); },
-  updateProgress: function (id, pct) { return put("/api/courses/" + id + "/progress", { progressPercent: pct }); }
+  updateProgress: function (id, pct) { return put("/api/courses/" + id + "/progress", { progressPercent: pct }); },
+  listPaths: function () { return get("/api/paths"); },
+  getPathDetail: function (id) { return get("/api/paths/" + id); },
+  enrollPath: function (id) { return post("/api/paths/" + id + "/enroll"); },
+  listExams: function () { return get("/api/exams"); },
+  getExam: function (id) { return get("/api/exams/" + id); },
+  startExam: function (id) { return post("/api/exams/" + id + "/start"); },
+  submitAnswer: function (recId, qid, ans) { return post("/api/exams/records/" + recId + "/answer", { questionId: String(qid), userAnswer: ans }); },
+  finishExam: function (recId) { return post("/api/exams/records/" + recId + "/finish"); },
+  getExamRecords: function () { return get("/api/exams/my-records"); },
+  getCreditAccount: function () { return get("/api/credits/my-account"); },
+  getCreditRecords: function () { return get("/api/credits/my-records"); },
+  searchKnowledge: function (kw) { return get("/api/knowledge" + (kw ? "?keyword=" + encodeURIComponent(kw) : "")); },
+  getKnowledgeDetail: function (id) { return get("/api/knowledge/" + id); },
+  hotKnowledgeTags: function () { return get("/api/knowledge/tags/hot"); }
 };

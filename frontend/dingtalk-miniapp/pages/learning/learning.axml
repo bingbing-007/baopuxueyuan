@@ -1,6 +1,16 @@
-<view class="page"><view class="loading" a:if="{{loading}}">加载中…</view><block a:if="{{course&&!loading}}">
-<view class="player"><image class="player-img" src="{{course.coverUrl}}" mode="aspectFill"/><view class="player-mask"><view class="player-btn">&#9654;</view><text class="player-hint">正在学习：{{chapters[activeChap-1].title}}</text></view></view>
-<view class="card"><view class="prow"><text class="card-title" style="margin-bottom:0">学习进度</text><text class="pct">{{course.progressPercent}}%</text></view><view class="progress" style="margin-top:16rpx"><view class="progress-bar" style="width:{{course.progressPercent}}%"></view></view><button class="btn btn-primary btn-block" style="margin-top:24rpx" a:if="{{course.progressPercent<100}}" onTap="addPct">标记本章完成 (+20%)</button><view class="done-msg" a:else><text>已完成全部学习内容</text></view></view>
-<view class="card"><text class="card-title">课程章节</text><view class="chaps"><view class="chap {{item.done?'done':''}} {{activeChap===item.id?'on':''}}" a:for="{{chapters}}" a:key="id" data-id="{{item.id}}" onTap="tapChap"><text class="chap-n {{activeChap===item.id?'on':''}}">{{index+1}}</text><view class="chap-info"><text class="chap-t">{{item.title}}</text><text class="chap-d">{{item.dur}}</text></view><text class="chap-s">{{item.done?'&#10003;':activeChap===item.id?'&#9654;':'&#9906;'}}</text></view></view></view>
-<view class="card"><text class="card-title">学习笔记</text><view style="text-align:center;padding:24rpx 0;color:var(--text3);font-size:24rpx">暂无笔记，学习过程中可随时记录</view><button class="btn btn-outline btn-block" style="margin-top:16rpx">添加笔记</button></view>
-<view style="height:40rpx"></view></block></view>
+﻿<view class="container">
+  <view wx:if="{{dashboard}}" class="my-courses">
+    <text class="section-title">我的课程 ({{dashboard.enrolledCount}}门)</text>
+    <view wx:for="{{dashboard.courses}}" wx:key="id" class="mini-course" data-id="{{item.id}}" onTap="goDetail">
+      <text class="mini-title">{{item.title}}</text>
+      <progress percent="{{item.progressPercent}}" stroke-width="6" activeColor="#176b52" backgroundColor="#e5e1d8" />
+    </view>
+  </view>
+
+  <view wx:if="{{paths.length}}" class="section">
+    <text class="section-title">学习地图</text>
+    <view wx:for="{{paths}}" wx:key="id" class="mini-course" data-id="{{item.id}}" onTap="goPath">
+      <text class="mini-title">{{item.title}}</text>
+    </view>
+  </view>
+</view>

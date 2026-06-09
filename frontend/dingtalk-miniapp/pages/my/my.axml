@@ -1,7 +1,18 @@
-<view class="page"><view class="profile"><view class="pro-avatar">BP</view><text class="pro-name">{{userInfo.name||'未登录'}}</text><text class="pro-sub" a:if="{{userInfo}}">抱朴学院 · 企业学员</text><text class="pro-sub dim" a:else>登录后查看学习数据</text></view>
-<view class="dash" a:if="{{dashboard}}"><view class="dash-item"><text class="dash-num">{{dashboard.enrolledCount}}</text><text class="dash-lbl">已报名</text></view><view class="dash-item"><text class="dash-num accent">{{dashboard.averageProgress}}%</text><text class="dash-lbl">平均进度</text></view><view class="dash-item"><text class="dash-num">{{dashboard.completedCount}}</text><text class="dash-lbl">已完成</text></view></view>
-<view class="card" style="margin-top:24rpx" a:if="{{dashboard}}"><text class="card-title">本周学习</text><view class="week"><view class="wd" a:for="{{weekDays}}" a:key="*this"><text class="wd-t">{{item}}</text><view class="wd-d {{weekStudied[index]?'on':''}}"></view></view></view></view>
-<view class="card menu"><view class="mi"><text class="mi-ic">&#9733;</text><text class="mi-t">我的证书</text><text class="mi-b">1</text><text class="mi-a">&rsaquo;</text></view><view class="mi"><text class="mi-ic">&#9829;</text><text class="mi-t">我的收藏</text><text class="mi-a">&rsaquo;</text></view><view class="mi"><text class="mi-ic">&#9783;</text><text class="mi-t">学习报告</text><text class="mi-a">&rsaquo;</text></view><view class="mi"><text class="mi-ic">&#9881;</text><text class="mi-t">设置</text><text class="mi-a">&rsaquo;</text></view></view>
-<view class="card" a:if="{{dashboard&&dashboard.courses&&dashboard.courses.length}}"><text class="card-title">我的课程</text><view class="mclist"><view class="mc" a:for="{{dashboard.courses}}" a:key="id" data-id="{{item.id}}" onTap="goDetail"><image class="mc-img" src="{{item.coverUrl}}" mode="aspectFill"/><view class="mc-body"><text class="mc-title">{{item.title}}</text><view class="progress" style="margin-top:10rpx"><view class="progress-bar" style="width:{{item.progressPercent}}%"></view></view><view style="display:flex;justify-content:space-between;margin-top:8rpx"><text class="tag">{{item.category}}</text><text style="font-size:24rpx;font-weight:800;color:var(--primary)">{{item.progressPercent}}%</text></view></view></view></view></view>
-<view style="margin-top:40rpx;padding:0 24rpx" a:if="{{userInfo}}"><button class="btn btn-outline btn-block" style="color:var(--red);border-color:#fcc" onTap="logout">退出登录</button></view>
-<view style="height:40rpx"></view></view>
+﻿<view class="container">
+  <view wx:if="{{userInfo}}" class="my-header">
+    <text class="my-name">{{userInfo.name}}</text>
+    <text class="my-id">钉钉ID: {{userInfo.userId}}</text>
+  </view>
+
+  <view wx:if="{{creditAccount}}" class="credit-card">
+    <text class="credit-label">我的学分</text>
+    <text class="credit-balance">{{creditAccount.balance}}</text>
+    <text class="credit-total">累计获得 {{creditAccount.totalEarned}}</text>
+  </view>
+
+  <view class="my-menu">
+    <view class="menu-item" onTap="logout">
+      <text>退出登录</text>
+    </view>
+  </view>
+</view>
