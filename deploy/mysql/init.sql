@@ -99,6 +99,55 @@ CREATE TABLE IF NOT EXISTS bp_enrollment (
 );
 
 
+
+-- ===== Learning Path (学习地图) =====
+
+CREATE TABLE IF NOT EXISTS bp_learning_path (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  cover_url VARCHAR(500) NULL,
+  category VARCHAR(64) NOT NULL DEFAULT '通用',
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS bp_path_stage (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  path_id BIGINT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  unlock_rule VARCHAR(50) NOT NULL DEFAULT 'previous_completed',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_stage_path FOREIGN KEY (path_id) REFERENCES bp_learning_path(id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_path_stage_course (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  stage_id BIGINT NOT NULL,
+  course_id BIGINT NOT NULL,
+  required TINYINT NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_stage_course (stage_id, course_id),
+  CONSTRAINT fk_psc_stage FOREIGN KEY (stage_id) REFERENCES bp_path_stage(id),
+  CONSTRAINT fk_psc_course FOREIGN KEY (course_id) REFERENCES bp_course(id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_user_path_enrollment (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  path_id BIGINT NOT NULL,
+  current_stage_id BIGINT NULL,
+  completed TINYINT NOT NULL DEFAULT 0,
+  enrolled_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  completed_at DATETIME NULL,
+  UNIQUE KEY uk_user_path (user_id, path_id),
+  CONSTRAINT fk_upe_user FOREIGN KEY (user_id) REFERENCES bp_user(id),
+  CONSTRAINT fk_upe_path FOREIGN KEY (path_id) REFERENCES bp_learning_path(id)
+);
 -- ===== Exam =====
 
 CREATE TABLE IF NOT EXISTS bp_exam (
@@ -191,4 +240,6 @@ ON DUPLICATE KEY UPDATE
   duration_minutes = VALUES(duration_minutes),
   price = VALUES(price),
   status = VALUES(status);
+
+
 

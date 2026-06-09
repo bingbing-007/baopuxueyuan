@@ -69,6 +69,49 @@ export function listCourses() {
   return request<CourseSummary[]>('/api/courses')
 }
 
+
+export type LearningPath = {
+  id: number
+  title: string
+  description: string
+  coverUrl: string
+  category: string
+}
+
+export type PathStage = {
+  id: number
+  title: string
+  sortOrder: number
+  unlocked: boolean
+  completed: boolean
+  courses: PathStageCourse[]
+}
+
+export type PathStageCourse = {
+  courseId: number
+  courseTitle: string
+  courseCover: string
+  progressPercent: number
+  enrolled: boolean
+}
+
+export type PathDetail = {
+  path: LearningPath
+  stages: PathStage[]
+  enrolled: boolean
+}
+
+export function listPaths() {
+  return request<LearningPath[]>('/api/paths')
+}
+
+export function getPathDetail(pathId: number) {
+  return request<PathDetail>('/api/paths/' + pathId)
+}
+
+export function enrollPath(pathId: number) {
+  return request<{ status: string }>('/api/paths/' + pathId + '/enroll', { method: 'POST' })
+}
 export function getDashboard() {
   return request<DashboardResponse>('/api/me/dashboard')
 }
@@ -83,3 +126,4 @@ export function updateProgress(courseId: number, progressPercent: number) {
     { method: 'PUT', body: JSON.stringify({ progressPercent }) }
   )
 }
+

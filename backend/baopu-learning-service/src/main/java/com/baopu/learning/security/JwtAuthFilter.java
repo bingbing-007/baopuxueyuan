@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
   private static final List<String> PUBLIC_PATHS = List.of(
-      ("/api/auth/login", "/api/auth/dingtalk/login", "/api/health", "/api/courses", "/api/courses/", "/api/exams"));
+      (("/api/auth/login", "/api/auth/dingtalk/login", "/api/health", "/api/courses", "/api/courses/", "/api/exams", "/api/paths")));
 
   private final JwtProvider jwtProvider;
   private final ObjectMapper objectMapper;
@@ -61,4 +61,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     response.getWriter().write(objectMapper.writeValueAsString(Map.of("message", message)));
   }
 }
+
 
