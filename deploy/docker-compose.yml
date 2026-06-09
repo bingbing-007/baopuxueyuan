@@ -1,5 +1,22 @@
 ﻿services:
-  learning-service:
+
+  iam-service:
+    build:
+      context: ../backend
+      dockerfile: baopu-iam-service/Dockerfile
+    container_name: baopu-iam-service
+    restart: always
+    environment:
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      BAOPU_JWT_SECRET: ${BAOPU_JWT_SECRET}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8081:8081"  learning-service:
     build:
       context: ../backend
       dockerfile: baopu-learning-service/Dockerfile
@@ -95,3 +112,4 @@ volumes:
   mysql_data:
   redis_data:
   rabbitmq_data:
+

@@ -1,0 +1,23 @@
+﻿server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: baopu-iam-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/baopu_learning?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${SPRING_DATASOURCE_USERNAME:baopu}
+    password: ${SPRING_DATASOURCE_PASSWORD:baopu123}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    time-zone: Asia/Shanghai
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+baopu:
+  jwt:
+    secret: ${BAOPU_JWT_SECRET:baopu-learning-platform-jwt-secret-key-2026-min-256-bits!!}

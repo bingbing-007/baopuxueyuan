@@ -1,17 +1,73 @@
 ﻿CREATE DATABASE IF NOT EXISTS baopu_learning DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE baopu_learning;
 
+-- ===== IAM Core =====
+
+CREATE TABLE IF NOT EXISTS bp_tenant (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  code VARCHAR(50) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_code (code)
+);
+
 CREATE TABLE IF NOT EXISTS bp_user (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   tenant_id BIGINT NOT NULL DEFAULT 1,
   dingtalk_user_id VARCHAR(64) NOT NULL,
   name VARCHAR(100) NOT NULL,
   mobile VARCHAR(30) NULL,
+  avatar VARCHAR(500) NULL,
   status TINYINT NOT NULL DEFAULT 1,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY uk_tenant_ding_user (tenant_id, dingtalk_user_id)
 );
+
+CREATE TABLE IF NOT EXISTS bp_department (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  dingtalk_dept_id BIGINT NULL,
+  parent_id BIGINT NULL,
+  name VARCHAR(100) NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_ding_dept (tenant_id, dingtalk_dept_id),
+  KEY idx_parent (parent_id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_role (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  name VARCHAR(50) NOT NULL,
+  code VARCHAR(50) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_role (tenant_id, code)
+);
+
+CREATE TABLE IF NOT EXISTS bp_user_role (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  role_id BIGINT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user_role (user_id, role_id),
+  CONSTRAINT fk_ur_user FOREIGN KEY (user_id) REFERENCES bp_user(id),
+  CONSTRAINT fk_ur_role FOREIGN KEY (role_id) REFERENCES bp_role(id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_user_dept (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  dept_id BIGINT NOT NULL,
+  is_primary TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user_dept (user_id, dept_id),
+  CONSTRAINT fk_ud_user FOREIGN KEY (user_id) REFERENCES bp_user(id),
+  CONSTRAINT fk_ud_dept FOREIGN KEY (dept_id) REFERENCES bp_department(id)
+);
+
+-- ===== Learning =====
 
 CREATE TABLE IF NOT EXISTS bp_course (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -41,6 +97,20 @@ CREATE TABLE IF NOT EXISTS bp_enrollment (
   CONSTRAINT fk_enrollment_user FOREIGN KEY (user_id) REFERENCES bp_user(id),
   CONSTRAINT fk_enrollment_course FOREIGN KEY (course_id) REFERENCES bp_course(id)
 );
+
+-- ===== Seed data =====
+
+INSERT IGNORE INTO bp_tenant (id, name, code) VALUES (1, '抱朴学院', 'baopu');
+
+INSERT IGNORE INTO bp_role (id, tenant_id, name, code) VALUES
+  (1, 1, '管理员', 'admin'),
+  (2, 1, '讲师', 'lecturer'),
+  (3, 1, '学员', 'student');
+
+INSERT IGNORE INTO bp_department (id, tenant_id, name, sort_order) VALUES
+  (1, 1, '总部', 1),
+  (2, 1, '技术部', 2),
+  (3, 1, '人力资源部', 3);
 
 INSERT INTO bp_course (id, tenant_id, title, description, cover_url, category, lecturer, duration_minutes, price, status)
 VALUES
