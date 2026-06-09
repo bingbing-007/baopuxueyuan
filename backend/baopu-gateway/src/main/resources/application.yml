@@ -1,0 +1,38 @@
+﻿server:
+  port: ${SERVER_PORT:8000}
+
+spring:
+  application:
+    name: baopu-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: learning-service
+          uri: ${LEARNING_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/api/courses/**,/api/me/**,/api/exams/**,/api/auth/**
+        - id: iam-service
+          uri: ${IAM_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/iam/**
+        - id: dingtalk-service
+          uri: ${DINGTALK_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/dingtalk/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+baopu:
+  jwt:
+    secret: ${BAOPU_JWT_SECRET:baopu-learning-platform-jwt-secret-key-2026-min-256-bits!!}

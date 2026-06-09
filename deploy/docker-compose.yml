@@ -1,4 +1,18 @@
 ﻿services:
+  gateway:
+    build:
+      context: ../backend
+      dockerfile: baopu-gateway/Dockerfile
+    container_name: baopu-gateway
+    restart: always
+    environment:
+      SERVER_PORT: 8000
+      BAOPU_JWT_SECRET: ${BAOPU_JWT_SECRET}
+      LEARNING_SERVICE_URL: http://learning-service:8080
+      IAM_SERVICE_URL: http://iam-service:8081
+      DINGTALK_SERVICE_URL: http://dingtalk-service:8082
+    ports:
+      - "8000:8000"
 
   iam-service:
     build:
@@ -16,7 +30,9 @@
       mysql:
         condition: service_healthy
     ports:
-      - "8081:8081"  learning-service:
+      - "8081:8081"
+
+  learning-service:
     build:
       context: ../backend
       dockerfile: baopu-learning-service/Dockerfile
@@ -46,10 +62,16 @@
     restart: always
     environment:
       SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       DINGTALK_APP_KEY: ${DINGTALK_APP_KEY}
       DINGTALK_APP_SECRET: ${DINGTALK_APP_SECRET}
       DINGTALK_CORP_ID: ${DINGTALK_CORP_ID}
       DINGTALK_AGENT_ID: ${DINGTALK_AGENT_ID}
+    depends_on:
+      mysql:
+        condition: service_healthy
     ports:
       - "8082:8082"
 
@@ -112,4 +134,3 @@ volumes:
   mysql_data:
   redis_data:
   rabbitmq_data:
-
