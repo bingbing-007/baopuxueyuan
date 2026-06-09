@@ -26,7 +26,7 @@ export type DashboardResponse = {
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
 
-function getToken(): string | null {
+export function getToken(): string | null {
   try {
     const raw = localStorage.getItem('baopu-session')
     if (!raw) return null
@@ -126,4 +126,5 @@ export function updateProgress(courseId: number, progressPercent: number) {
     { method: 'PUT', body: JSON.stringify({ progressPercent }) }
   )
 }
+
 
