@@ -1,0 +1,28 @@
+.page{padding-bottom:40rpx}
+.profile{display:flex;flex-direction:column;align-items:center;padding:36rpx 28rpx 28rpx;background:linear-gradient(160deg,#0a2e24,#176b52 60%,#1a8c6a)}
+.pro-avatar{width:100rpx;height:100rpx;display:flex;align-items:center;justify-content:center;font-size:32rpx;font-weight:900;color:#176b52;background:rgba(255,255,255,.92);border:3rpx solid rgba(255,255,255,.3);border-radius:50%;margin-bottom:14rpx}
+.pro-name{font-size:34rpx;font-weight:700;color:#fff}
+.pro-sub{font-size:24rpx;color:rgba(255,255,255,.7);margin-top:6rpx}
+.pro-sub.dim{color:rgba(255,255,255,.4)}
+.dash{display:flex;gap:14rpx;margin:-16rpx 24rpx 0;position:relative;z-index:1}
+.dash-item{flex:1;text-align:center;padding:24rpx 8rpx;background:var(--card);border:1rpx solid var(--border);border-radius:var(--radius)}
+.dash-num{display:block;font-size:34rpx;font-weight:800}
+.dash-num.accent{color:var(--primary)}
+.dash-lbl{display:block;font-size:22rpx;color:var(--text3);margin-top:4rpx}
+.week{display:flex;justify-content:space-around}
+.wd{display:flex;flex-direction:column;align-items:center;gap:10rpx}
+.wd-t{font-size:22rpx;color:var(--text3)}
+.wd-d{width:14rpx;height:14rpx;border-radius:50%;background:#e8e8e8}
+.wd-d.on{background:var(--primary)}
+.menu{padding:8rpx 0}
+.mi{display:flex;align-items:center;gap:16rpx;padding:22rpx 28rpx;border-bottom:1rpx solid var(--border)}
+.mi:last-child{border-bottom:none}
+.mi-ic{font-size:32rpx;flex-shrink:0;color:var(--primary)}
+.mi-t{flex:1;font-size:28rpx}
+.mi-b{font-size:22rpx;color:#fff;background:var(--primary);padding:4rpx 14rpx;border-radius:20rpx}
+.mi-a{font-size:32rpx;color:#ccc}
+.mclist{display:flex;flex-direction:column;gap:14rpx}
+.mc{display:flex;gap:16rpx;padding:16rpx;background:#fafafa;border-radius:var(--radius-sm)}
+.mc-img{width:110rpx;height:80rpx;border-radius:8rpx;background:#e8e8e8;flex-shrink:0}
+.mc-body{flex:1;min-width:0}
+.mc-title{display:block;font-size:26rpx;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

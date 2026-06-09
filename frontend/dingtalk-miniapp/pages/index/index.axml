@@ -1,0 +1,107 @@
+<view class="page">
+  <view class="hero">
+    <view class="hero-bg"></view>
+    <view class="hero-body">
+      <view class="hero-top">
+        <view class="hero-logo">BP</view>
+        <text class="hero-name">抱朴学院</text>
+      </view>
+      <text class="hero-tagline">见素抱朴 · 少私寡欲</text>
+      <view class="hero-search" onTap="goSearch">
+        <text class="hero-search-icon">&#9906;</text>
+        <text class="hero-search-hint">搜索课程、讲师…</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="quick">
+    <view class="quick-item" a:for="{{quickActions}}" a:key="idx">
+      <view class="quick-icon">{{item.idx}}</view>
+      <text class="quick-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <view class="notice" a:if="{{notice}}">
+    <view class="notice-dot"></view>
+    <text class="notice-text">{{notice}}</text>
+  </view>
+
+  <view class="card" a:if="{{tasks.length}}">
+    <text class="card-title">今日任务</text>
+    <view class="task-list">
+      <view class="task {{item.done ? 'done' : ''}}" a:for="{{tasks}}" a:key="*this" data-idx="{{index}}" onTap="tapTask">
+        <view class="task-check {{item.done ? 'on' : ''}}">
+          <text a:if="{{item.done}}">&#10003;</text>
+        </view>
+        <text class="task-text">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading" a:if="{{loading}}">加载中…</view>
+  <view class="card" a:if="{{error && !loading}}" style="color:var(--red)">{{error}}</view>
+
+  <view a:if="{{enrolled.length && !loading}}">
+    <view class="sec">
+      <text class="sec-title">继续学习</text>
+      <text class="sec-more" onTap="goCourses">全部 &rsaquo;</text>
+    </view>
+    <scroll-view scroll-x class="hrow">
+      <view class="hrow-inner">
+        <view class="hcard" a:for="{{enrolled}}" a:key="id" data-id="{{item.id}}" onTap="goDetail">
+          <image class="hcard-img" src="{{item.coverUrl}}" mode="aspectFill"/>
+          <view class="hcard-mask"></view>
+          <view class="hcard-body">
+            <text class="hcard-title">{{item.title}}</text>
+            <view class="progress" style="background:rgba(255,255,255,.3)">
+              <view class="progress-bar" style="width:{{item.progressPercent}}%;background:#fff"></view>
+            </view>
+            <text class="hcard-pct">{{item.progressPercent}}%</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view a:if="{{dashboard && !loading}}">
+    <view class="sec"><text class="sec-title">学习数据</text></view>
+    <view class="dash">
+      <view class="dash-item">
+        <text class="dash-num">{{dashboard.enrolledCount}}</text>
+        <text class="dash-lbl">已报名</text>
+      </view>
+      <view class="dash-item">
+        <text class="dash-num accent">{{dashboard.averageProgress}}%</text>
+        <text class="dash-lbl">平均进度</text>
+      </view>
+      <view class="dash-item">
+        <text class="dash-num">{{dashboard.completedCount}}</text>
+        <text class="dash-lbl">已完成</text>
+      </view>
+    </view>
+  </view>
+
+  <view a:if="{{recommend.length && !loading}}">
+    <view class="sec"><text class="sec-title">推荐课程</text></view>
+    <view class="grid">
+      <view class="gcard" a:for="{{recommend}}" a:key="id" data-id="{{item.id}}" onTap="goDetail">
+        <image class="gcard-img" src="{{item.coverUrl}}" mode="aspectFill"/>
+        <view class="gcard-body">
+          <view class="gcard-row"><text class="tag">{{item.category}}</text><text class="gcard-dur">{{item.durationMinutes}}分钟</text></view>
+          <text class="gcard-title">{{item.title}}</text>
+          <text class="gcard-desc">{{item.description}}</text>
+          <view class="gcard-foot">
+            <text class="gcard-lec">{{item.lecturer}}</text>
+            <text class="gcard-price" a:if="{{item.price>0}}">&yen;{{item.price}}</text>
+            <text class="gcard-price free" a:else>免费</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" a:if="{{!userInfo && !loading}}">
+    <text class="empty-text">登录钉钉，开启学习之旅</text>
+  </view>
+  <view style="height:60rpx"></view>
+</view>

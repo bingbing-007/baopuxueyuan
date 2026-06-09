@@ -1,0 +1,36 @@
+page {
+  --primary: #176b52;
+  --primary-light: #e8f5ee;
+  --primary-lighter: #f4faf7;
+  --bg: #f5f5f5;
+  --card: #ffffff;
+  --border: #f0f0f0;
+  --text: #333333;
+  --text2: #666666;
+  --text3: #999999;
+  --red: #e74c3c;
+  --orange: #f08519;
+  --radius: 16rpx;
+  --radius-sm: 10rpx;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+  color: var(--text);
+  background: var(--bg);
+}
+.btn { display: flex; align-items: center; justify-content: center; height: 88rpx; padding: 0 40rpx; font-size: 30rpx; font-weight: 600; border: none; border-radius: var(--radius); }
+.btn-primary { color: #fff; background: var(--primary); }
+.btn-primary:active { opacity: 0.85; }
+.btn-outline { color: var(--primary); background: transparent; border: 2rpx solid var(--primary); }
+.btn-block { width: 100%; }
+.card { margin: 20rpx 24rpx; padding: 28rpx; background: var(--card); border-radius: var(--radius); border: 1rpx solid var(--border); }
+.card-title { font-size: 30rpx; font-weight: 700; margin-bottom: 20rpx; display: block; }
+.tag { display: inline-flex; align-items: center; height: 40rpx; padding: 0 14rpx; font-size: 22rpx; font-weight: 600; color: var(--primary); background: var(--primary-light); border-radius: 8rpx; }
+.progress { width: 100%; height: 8rpx; background: #f0f0f0; border-radius: 8rpx; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--primary); border-radius: 8rpx; }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 24rpx; margin: 32rpx 0 16rpx; }
+.section-title { font-size: 32rpx; font-weight: 700; }
+.section-more { font-size: 26rpx; color: var(--primary); }
+.empty { display: flex; flex-direction: column; align-items: center; padding: 80rpx 40rpx; color: var(--text3); }
+.empty-icon { font-size: 48rpx; margin-bottom: 16rpx; }
+.search-bar { display: flex; align-items: center; gap: 12rpx; height: 72rpx; padding: 0 20rpx; background: var(--card); border: 1rpx solid var(--border); border-radius: 36rpx; }
+.loading { padding: 80rpx 0; text-align: center; color: var(--text3); }

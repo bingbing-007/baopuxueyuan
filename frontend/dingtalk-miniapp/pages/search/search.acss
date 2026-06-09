@@ -1,0 +1,9 @@
+.page{padding-bottom:40rpx}
+.search-bar-icon{font-size:28rpx;color:var(--text3);flex-shrink:0}
+.search-bar input{flex:1;height:100%;font-size:28rpx;background:transparent}
+.cnt{padding:8rpx 24rpx 12rpx;font-size:24rpx;color:var(--text3)}
+.list{padding:0 24rpx;display:flex;flex-direction:column;gap:14rpx}
+.scard{display:flex;gap:18rpx;padding:18rpx;background:var(--card);border:1rpx solid var(--border);border-radius:var(--radius)}
+.scard-img{width:120rpx;height:88rpx;border-radius:8rpx;background:#e8e8e8;flex-shrink:0}
+.scard-body{flex:1;display:flex;flex-direction:column;justify-content:center}
+.scard-title{display:block;font-size:28rpx;font-weight:700;margin-bottom:8rpx;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
