@@ -1,1 +1,15 @@
-﻿
+﻿.exam-header-bar { display: flex; justify-content: space-between; padding: 14px 0; font-size: 14px; color: #888; border-bottom: 1px solid #eee; }
+.question-block { padding: 20px 0; }
+.q-stem { font-size: 17px; font-weight: 600; color: #222; line-height: 1.6; margin-bottom: 18px; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt-btn { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 16px; font-size: 15px; }
+.opt-btn.selected { border-color: #176b52; background: #e8f0ec; color: #176b52; font-weight: 600; }
+.exam-nav { display: flex; gap: 10px; position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: #fff; border-top: 1px solid #eee; }
+.exam-nav button { flex: 1; height: 44px; border-radius: 10px; font-size: 15px; }
+.nav-prev, .nav-next { background: #f5f5f5; color: #333; }
+.nav-finish { background: #176b52; color: #fff; }
+.nav-prev[disabled], .nav-next[disabled] { opacity: .3; }
+.result-page { text-align: center; padding: 60px 16px; }
+.result-icon { font-size: 56px; margin-bottom: 12px; }
+.result-score { font-size: 18px; margin-bottom: 20px; }
+.result-btn { padding: 12px 32px; background: #176b52; color: #fff; border-radius: 10px; font-size: 15px; }

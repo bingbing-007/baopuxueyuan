@@ -1,25 +1,13 @@
-.page{padding-bottom:40rpx}
-.search-bar-icon{font-size:28rpx;color:var(--text3);flex-shrink:0}
-.search-bar input{flex:1;height:100%;font-size:28rpx;background:transparent}
-.toolbar{display:flex;align-items:center;gap:12rpx}
-.tool-cats{flex:1;white-space:nowrap}
-.tool-inner{display:inline-flex;gap:12rpx;padding:0 24rpx}
-.chip{display:inline-flex;align-items:center;height:56rpx;padding:0 22rpx;font-size:24rpx;font-weight:600;color:var(--text2);background:var(--card);border:1rpx solid var(--border);border-radius:28rpx}
-.chip.on{color:#fff;background:var(--primary);border-color:var(--primary)}
-.tool-sorts{display:flex;gap:16rpx;flex-shrink:0;padding-right:24rpx}
-.sort{font-size:24rpx;color:var(--text3)}
-.sort.on{color:var(--primary);font-weight:700}
-.cnt{padding:8rpx 24rpx 12rpx;font-size:24rpx;color:var(--text3)}
-.grid{display:flex;flex-wrap:wrap;padding:0 24rpx;gap:14rpx}
-.gcard{width:calc(50% - 7rpx);background:var(--card);border:1rpx solid var(--border);border-radius:var(--radius);overflow:hidden}
-.gcard-cover{position:relative;height:200rpx}
-.gcard-img{width:100%;height:100%;background:#e8e8e8}
-.gcard-badge{position:absolute;top:10rpx;right:10rpx;height:36rpx;padding:0 14rpx;display:flex;align-items:center;font-size:20rpx;font-weight:700;color:#fff;background:var(--primary);border-radius:18rpx}
-.gcard-dur{position:absolute;bottom:10rpx;right:10rpx;height:32rpx;padding:0 12rpx;display:flex;align-items:center;font-size:20rpx;color:#fff;background:rgba(0,0,0,.5);border-radius:16rpx}
-.gcard-body{padding:16rpx 14rpx 18rpx}
-.gcard-title{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:26rpx;font-weight:700;line-height:1.35;margin-bottom:6rpx;min-height:70rpx}
-.gcard-desc{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:22rpx;color:var(--text3);line-height:1.5;margin-bottom:10rpx;min-height:66rpx}
-.gcard-foot{display:flex;align-items:center;justify-content:space-between}
-.gcard-lec{font-size:22rpx;color:var(--text3)}
-.gcard-price{font-size:24rpx;font-weight:800;color:var(--orange)}
-.gcard-price.free{color:var(--primary)}
+﻿.category-bar { display: flex; gap: 8px; padding: 12px 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+.cat-item { padding: 6px 16px; border-radius: 20px; font-size: 13px; background: #fff; color: #555; flex-shrink: 0; }
+.cat-item.active { background: #176b52; color: #fff; }
+.course-list { display: flex; flex-direction: column; gap: 12px; }
+.course-card { background: #fff; border-radius: 12px; overflow: hidden; display: flex; }
+.course-cover { width: 120px; height: 80px; flex-shrink: 0; }
+.course-info { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.course-category { font-size: 11px; color: #176b52; background: #e8f0ec; padding: 2px 8px; border-radius: 10px; align-self: flex-start; }
+.course-title { font-size: 15px; font-weight: 600; color: #222; }
+.course-meta { font-size: 12px; color: #888; }
+.course-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+.course-price { font-size: 14px; font-weight: 700; color: #e67e22; }
+.course-progress { font-size: 12px; color: #176b52; }

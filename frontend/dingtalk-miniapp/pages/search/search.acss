@@ -1,9 +1,10 @@
-.page{padding-bottom:40rpx}
-.search-bar-icon{font-size:28rpx;color:var(--text3);flex-shrink:0}
-.search-bar input{flex:1;height:100%;font-size:28rpx;background:transparent}
-.cnt{padding:8rpx 24rpx 12rpx;font-size:24rpx;color:var(--text3)}
-.list{padding:0 24rpx;display:flex;flex-direction:column;gap:14rpx}
-.scard{display:flex;gap:18rpx;padding:18rpx;background:var(--card);border:1rpx solid var(--border);border-radius:var(--radius)}
-.scard-img{width:120rpx;height:88rpx;border-radius:8rpx;background:#e8e8e8;flex-shrink:0}
-.scard-body{flex:1;display:flex;flex-direction:column;justify-content:center}
-.scard-title{display:block;font-size:28rpx;font-weight:700;margin-bottom:8rpx;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+﻿.search-box { display: flex; gap: 10px; align-items: center; padding: 12px 0; }
+.search-box input { flex: 1; height: 40px; background: #fff; border-radius: 10px; padding: 0 14px; font-size: 14px; }
+.search-box button { padding: 0 18px; height: 40px; background: #176b52; color: #fff; border-radius: 10px; font-size: 14px; line-height: 40px; }
+.hot-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.tag-label { font-size: 12px; color: #888; line-height: 28px; }
+.tag-item { font-size: 12px; color: #176b52; background: #e8f0ec; padding: 4px 12px; border-radius: 14px; }
+.article-item { background: #fff; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.article-title { font-size: 15px; font-weight: 600; color: #222; display: block; margin-bottom: 4px; }
+.article-summary { font-size: 13px; color: #666; display: block; margin-bottom: 6px; }
+.article-meta { font-size: 11px; color: #aaa; display: block; }

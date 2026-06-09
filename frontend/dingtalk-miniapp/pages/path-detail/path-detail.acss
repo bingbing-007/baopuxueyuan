@@ -1,1 +1,17 @@
-﻿
+﻿.pd-hero { padding: 4px 0 14px; }
+.pd-title { font-size: 22px; font-weight: 700; }
+.pd-desc { font-size: 14px; color: #666; margin-top: 8px; line-height: 1.6; }
+.pd-enroll { text-align: center; padding: 14px 0; }
+.pd-btn { display: inline-block; padding: 14px 36px; background: #176b52; color: #fff; border-radius: 12px; font-size: 16px; font-weight: 600; }
+.stage { background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+.stage-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.stage-num { width: 32px; height: 32px; border-radius: 50%; background: #e8f0ec; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #176b52; }
+.stage-num.locked { background: #f0f0f0; color: #bbb; }
+.stage-num.done { background: #176b52; color: #fff; }
+.stage-info { display: flex; flex-direction: column; }
+.stage-name { font-size: 15px; font-weight: 600; }
+.stage-hint { font-size: 12px; color: #888; }
+.sc-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: #f9faf9; border-radius: 8px; margin-bottom: 6px; }
+.sc-item image { width: 44px; height: 32px; border-radius: 4px; }
+.sc-item text:first-of-type { font-size: 14px; font-weight: 500; flex: 1; }
+.sc-pct { font-size: 13px; color: #176b52; font-weight: 600; }
