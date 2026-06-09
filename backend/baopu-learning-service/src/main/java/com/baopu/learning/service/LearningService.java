@@ -1,42 +1,62 @@
-package com.baopu.learning.service;
+﻿package com.baopu.learning.service;
 
 import com.baopu.learning.api.dto.CourseSummary;
 import com.baopu.learning.api.dto.DashboardResponse;
 import com.baopu.learning.api.dto.LoginResponse;
 import com.baopu.learning.api.dto.ProgressRequest;
+import com.baopu.learning.dingtalk.DingtalkClient;
 import com.baopu.learning.model.Course;
 import com.baopu.learning.model.Enrollment;
 import com.baopu.learning.repository.CourseRepository;
 import com.baopu.learning.repository.EnrollmentRepository;
 import com.baopu.learning.repository.UserRepository;
+import com.baopu.learning.security.JwtProvider;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class LearningService {
+  private static final Logger log = LoggerFactory.getLogger(LearningService.class);
   private static final long DEFAULT_TENANT_ID = 1L;
 
   private final UserRepository userRepository;
   private final CourseRepository courseRepository;
   private final EnrollmentRepository enrollmentRepository;
+  private final JwtProvider jwtProvider;
+  private final DingtalkClient dingtalkClient;
 
   public LearningService(
       UserRepository userRepository,
       CourseRepository courseRepository,
-      EnrollmentRepository enrollmentRepository) {
+      EnrollmentRepository enrollmentRepository,
+      JwtProvider jwtProvider,
+      DingtalkClient dingtalkClient) {
     this.userRepository = userRepository;
     this.courseRepository = courseRepository;
     this.enrollmentRepository = enrollmentRepository;
+    this.jwtProvider = jwtProvider;
+    this.dingtalkClient = dingtalkClient;
   }
 
   public LoginResponse login(String dingtalkUserId, String name, String mobile) {
     var user = userRepository.upsert(DEFAULT_TENANT_ID, dingtalkUserId, name, mobile);
-    return new LoginResponse(user.id(), user.name(), "demo-token-" + user.id());
+    String token = jwtProvider.generate(user.id(), user.name());
+    return new LoginResponse(user.id(), user.name(), token);
+  }
+
+  public LoginResponse dingtalkLogin(String authCode) {
+    var dtUser = dingtalkClient.resolveUser(authCode);
+    log.info("DingTalk login: userId={}, name={}", dtUser.userId(), dtUser.name());
+    var user = userRepository.upsert(DEFAULT_TENANT_ID, dtUser.userId(), dtUser.name(), dtUser.mobile());
+    String token = jwtProvider.generate(user.id(), user.name());
+    return new LoginResponse(user.id(), user.name(), token);
   }
 
   public List<CourseSummary> listCourses(Long userId) {

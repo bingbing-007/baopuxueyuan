@@ -1,4 +1,4 @@
-services:
+﻿services:
   learning-service:
     build:
       context: ../backend
@@ -10,12 +10,31 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      BAOPU_CORS_ALLOWED_ORIGINS: ${BAOPU_CORS_ALLOWED_ORIGINS}
+      BAOPU_JWT_SECRET: ${BAOPU_JWT_SECRET}
+      DINGTALK_APP_KEY: ${DINGTALK_APP_KEY}
+      DINGTALK_APP_SECRET: ${DINGTALK_APP_SECRET}
+      DINGTALK_CORP_ID: ${DINGTALK_CORP_ID}
+      DINGTALK_AGENT_ID: ${DINGTALK_AGENT_ID}
     depends_on:
       mysql:
         condition: service_healthy
     ports:
       - "8080:8080"
+
+  dingtalk-service:
+    build:
+      context: ../backend
+      dockerfile: baopu-dingtalk-service/Dockerfile
+    container_name: baopu-dingtalk-service
+    restart: always
+    environment:
+      SERVER_PORT: 8082
+      DINGTALK_APP_KEY: ${DINGTALK_APP_KEY}
+      DINGTALK_APP_SECRET: ${DINGTALK_APP_SECRET}
+      DINGTALK_CORP_ID: ${DINGTALK_CORP_ID}
+      DINGTALK_AGENT_ID: ${DINGTALK_AGENT_ID}
+    ports:
+      - "8082:8082"
 
   web-portal:
     build:

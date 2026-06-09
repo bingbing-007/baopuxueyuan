@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { BookOpen, CheckCircle2, Clock3, GraduationCap, LogIn, PlayCircle, RefreshCw, UserRound } from 'lucide-vue-next'
 import {
@@ -36,9 +36,9 @@ async function loadData() {
   loading.value = true
   error.value = ''
   try {
-    courses.value = await listCourses(session.value?.userId)
+    courses.value = await listCourses()
     if (session.value) {
-      dashboard.value = await getDashboard(session.value.userId)
+      dashboard.value = await getDashboard()
     } else {
       dashboard.value = null
     }
@@ -76,7 +76,7 @@ async function enroll(course: CourseSummary) {
     error.value = '请先登录后再报名课程'
     return
   }
-  await enrollCourse(session.value.userId, course.id)
+  await enrollCourse(course.id)
   await loadData()
 }
 
@@ -86,7 +86,7 @@ async function addProgress(course: CourseSummary, step: number) {
     return
   }
   const nextProgress = Math.min(100, course.progressPercent + step)
-  await updateProgress(session.value.userId, course.id, nextProgress)
+  await updateProgress(course.id, nextProgress)
   await loadData()
 }
 

@@ -1,4 +1,4 @@
-package com.baopu.learning.api;
+﻿package com.baopu.learning.api;
 
 import com.baopu.learning.api.dto.LoginRequest;
 import com.baopu.learning.api.dto.LoginResponse;
@@ -21,5 +21,10 @@ public class AuthController {
   @PostMapping("/login")
   LoginResponse login(@Valid @RequestBody LoginRequest request) {
     return learningService.login(request.dingtalkUserId(), request.name(), request.mobile());
+  }
+
+  @PostMapping("/dingtalk/login")
+  LoginResponse dingtalkLogin(@Valid @RequestBody LoginRequest request) {
+    return learningService.dingtalkLogin(request.authCode());
   }
 }

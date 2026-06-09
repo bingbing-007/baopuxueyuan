@@ -1,9 +1,10 @@
-package com.baopu.learning.api;
+﻿package com.baopu.learning.api;
 
 import com.baopu.learning.api.dto.CourseSummary;
 import com.baopu.learning.api.dto.DashboardResponse;
 import com.baopu.learning.api.dto.ProgressRequest;
 import com.baopu.learning.service.LearningService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,34 +25,49 @@ public class CourseController {
   }
 
   @GetMapping("/courses")
-  List<CourseSummary> listCourses(@RequestHeader(value = "X-User-Id", required = false) Long userId) {
+  List<CourseSummary> listCourses(HttpServletRequest request) {
+    Long userId = getUserId(request);
     return learningService.listCourses(userId);
   }
 
   @GetMapping("/courses/{courseId}")
-  CourseSummary getCourse(
-      @RequestHeader(value = "X-User-Id", required = false) Long userId,
-      @PathVariable Long courseId) {
+  CourseSummary getCourse(HttpServletRequest request, @PathVariable Long courseId) {
+    Long userId = getUserId(request);
     return learningService.getCourse(userId, courseId);
   }
 
   @PostMapping("/courses/{courseId}/enroll")
-  CourseSummary enroll(
-      @RequestHeader("X-User-Id") Long userId,
-      @PathVariable Long courseId) {
+  CourseSummary enroll(HttpServletRequest request, @PathVariable Long courseId) {
+    Long userId = requireUserId(request);
     return learningService.enroll(userId, courseId);
   }
 
   @PutMapping("/courses/{courseId}/progress")
   CourseSummary updateProgress(
-      @RequestHeader("X-User-Id") Long userId,
+      HttpServletRequest request,
       @PathVariable Long courseId,
-      @Valid @RequestBody ProgressRequest request) {
-    return learningService.updateProgress(userId, courseId, request);
+      @Valid @RequestBody ProgressRequest progressRequest) {
+    Long userId = requireUserId(request);
+    return learningService.updateProgress(userId, courseId, progressRequest);
   }
 
   @GetMapping("/me/dashboard")
-  DashboardResponse dashboard(@RequestHeader("X-User-Id") Long userId) {
+  DashboardResponse dashboard(HttpServletRequest request) {
+    Long userId = requireUserId(request);
     return learningService.dashboard(userId);
+  }
+
+  private Long getUserId(HttpServletRequest request) {
+    Object attr = request.getAttribute("userId");
+    return attr instanceof Long id ? id : null;
+  }
+
+  private Long requireUserId(HttpServletRequest request) {
+    Object attr = request.getAttribute("userId");
+    if (attr instanceof Long id) {
+      return id;
+    }
+    throw new org.springframework.web.server.ResponseStatusException(
+        org.springframework.http.HttpStatus.UNAUTHORIZED, "Please login first");
   }
 }

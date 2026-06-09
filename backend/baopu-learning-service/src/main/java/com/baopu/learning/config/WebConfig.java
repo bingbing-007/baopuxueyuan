@@ -1,28 +1,34 @@
-package com.baopu.learning.config;
+﻿package com.baopu.learning.config;
 
-import java.util.Arrays;
-import org.springframework.beans.factory.annotation.Value;
+import com.baopu.learning.security.JwtAuthFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-  private final String[] allowedOrigins;
+  private final JwtAuthFilter jwtAuthFilter;
 
-  public WebConfig(@Value("${baopu.cors.allowed-origins}") String allowedOrigins) {
-    this.allowedOrigins = Arrays.stream(allowedOrigins.split(","))
-        .map(String::trim)
-        .filter(origin -> !origin.isBlank())
-        .toArray(String[]::new);
+  public WebConfig(JwtAuthFilter jwtAuthFilter) {
+    this.jwtAuthFilter = jwtAuthFilter;
+  }
+
+  @Bean
+  FilterRegistrationBean<JwtAuthFilter> jwtFilter() {
+    var reg = new FilterRegistrationBean<>(jwtAuthFilter);
+    reg.addUrlPatterns("/api/*");
+    reg.setOrder(1);
+    return reg;
   }
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/api/**")
-        .allowedOrigins(allowedOrigins)
+        .allowedOriginPatterns("*")
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
         .allowedHeaders("*")
-        .exposedHeaders("*");
+        .allowCredentials(true);
   }
 }

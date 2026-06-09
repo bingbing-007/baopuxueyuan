@@ -1,4 +1,4 @@
-export type CourseSummary = {
+﻿export type CourseSummary = {
   id: number
   title: string
   description: string
@@ -26,11 +26,22 @@ export type DashboardResponse = {
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
 
-async function request<T>(path: string, options: RequestInit = {}, userId?: number | null): Promise<T> {
+function getToken(): string | null {
+  try {
+    const raw = localStorage.getItem('baopu-session')
+    if (!raw) return null
+    return JSON.parse(raw).token ?? null
+  } catch {
+    return null
+  }
+}
+
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
   headers.set('Content-Type', 'application/json')
-  if (userId) {
-    headers.set('X-User-Id', String(userId))
+  const token = getToken()
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`)
   }
   const response = await fetch(`${API_BASE}${path}`, { ...options, headers })
   if (!response.ok) {
@@ -43,26 +54,32 @@ async function request<T>(path: string, options: RequestInit = {}, userId?: numb
 export function login(payload: { dingtalkUserId: string; name: string; mobile?: string }) {
   return request<LoginResponse>('/api/auth/login', {
     method: 'POST',
-    body: JSON.stringify(payload)
+    body: JSON.stringify({ ...payload, authCode: payload.dingtalkUserId })
   })
 }
 
-export function listCourses(userId?: number | null) {
-  return request<CourseSummary[]>('/api/courses', {}, userId)
+export function dingtalkLogin(authCode: string) {
+  return request<LoginResponse>('/api/auth/dingtalk/login', {
+    method: 'POST',
+    body: JSON.stringify({ authCode })
+  })
 }
 
-export function getDashboard(userId: number) {
-  return request<DashboardResponse>('/api/me/dashboard', {}, userId)
+export function listCourses() {
+  return request<CourseSummary[]>('/api/courses')
 }
 
-export function enrollCourse(userId: number, courseId: number) {
-  return request<CourseSummary>(`/api/courses/${courseId}/enroll`, { method: 'POST' }, userId)
+export function getDashboard() {
+  return request<DashboardResponse>('/api/me/dashboard')
 }
 
-export function updateProgress(userId: number, courseId: number, progressPercent: number) {
+export function enrollCourse(courseId: number) {
+  return request<CourseSummary>(`/api/courses/${courseId}/enroll`, { method: 'POST' })
+}
+
+export function updateProgress(courseId: number, progressPercent: number) {
   return request<CourseSummary>(
     `/api/courses/${courseId}/progress`,
-    { method: 'PUT', body: JSON.stringify({ progressPercent }) },
-    userId
+    { method: 'PUT', body: JSON.stringify({ progressPercent }) }
   )
 }
