@@ -100,6 +100,43 @@ CREATE TABLE IF NOT EXISTS bp_enrollment (
 
 
 
+
+-- ===== Credit System (学分体系) =====
+
+CREATE TABLE IF NOT EXISTS bp_credit_rule (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  tenant_id BIGINT NOT NULL DEFAULT 1,
+  name VARCHAR(100) NOT NULL,
+  code VARCHAR(50) NOT NULL,
+  action_type VARCHAR(50) NOT NULL,
+  credits INT NOT NULL DEFAULT 0,
+  max_per_day INT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_tenant_code (tenant_id, code)
+);
+
+CREATE TABLE IF NOT EXISTS bp_credit_account (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  total_earned INT NOT NULL DEFAULT 0,
+  balance INT NOT NULL DEFAULT 0,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user (user_id),
+  CONSTRAINT fk_ca_user FOREIGN KEY (user_id) REFERENCES bp_user(id)
+);
+
+CREATE TABLE IF NOT EXISTS bp_credit_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  rule_id BIGINT NULL,
+  action_type VARCHAR(50) NOT NULL,
+  credits INT NOT NULL,
+  description VARCHAR(255) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_user (user_id),
+  CONSTRAINT fk_cr_user FOREIGN KEY (user_id) REFERENCES bp_user(id)
+);
 -- ===== Learning Path (学习地图) =====
 
 CREATE TABLE IF NOT EXISTS bp_learning_path (
@@ -225,6 +262,13 @@ INSERT IGNORE INTO bp_department (id, tenant_id, name, sort_order) VALUES
   (2, 1, '技术部', 2),
   (3, 1, '人力资源部', 3);
 
+
+INSERT IGNORE INTO bp_credit_rule (id, tenant_id, name, code, action_type, credits, max_per_day) VALUES
+  (1, 1, '完成课程', 'course_complete', 'COURSE_COMPLETE', 10, 50),
+  (2, 1, '通过考试', 'exam_pass', 'EXAM_PASS', 20, 100),
+  (3, 1, '每日登录', 'daily_login', 'DAILY_LOGIN', 2, 2),
+  (4, 1, '完成学习路径', 'path_complete', 'PATH_COMPLETE', 50, 50);
+
 INSERT INTO bp_course (id, tenant_id, title, description, cover_url, category, lecturer, duration_minutes, price, status)
 VALUES
   (1, 1, '新员工入职必修课', '覆盖企业文化、制度规范、信息安全和协作流程，帮助员工快速进入工作状态。', 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80', '入职培训', '人力资源部', 45, 0, 1),
@@ -240,6 +284,8 @@ ON DUPLICATE KEY UPDATE
   duration_minutes = VALUES(duration_minutes),
   price = VALUES(price),
   status = VALUES(status);
+
+
 
 
 

@@ -10,7 +10,7 @@ import com.baopu.learning.model.Enrollment;
 import com.baopu.learning.repository.CourseRepository;
 import com.baopu.learning.repository.EnrollmentRepository;
 import com.baopu.learning.repository.UserRepository;
-import com.baopu.learning.security.JwtProvider;
+import com.baopu.learning.credit.service.CreditService;`nimport com.baopu.learning.security.JwtProvider;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -29,19 +29,19 @@ public class LearningService {
   private final UserRepository userRepository;
   private final CourseRepository courseRepository;
   private final EnrollmentRepository enrollmentRepository;
-  private final JwtProvider jwtProvider;
+  private final JwtProvider jwtProvider;`n  private final CreditService creditService;
   private final DingtalkClient dingtalkClient;
 
   public LearningService(
       UserRepository userRepository,
       CourseRepository courseRepository,
       EnrollmentRepository enrollmentRepository,
-      JwtProvider jwtProvider,
+      JwtProvider jwtProvider,`n      CreditService creditService,
       DingtalkClient dingtalkClient) {
     this.userRepository = userRepository;
     this.courseRepository = courseRepository;
     this.enrollmentRepository = enrollmentRepository;
-    this.jwtProvider = jwtProvider;
+    this.jwtProvider = jwtProvider;`n    this.creditService = creditService;
     this.dingtalkClient = dingtalkClient;
   }
 
@@ -87,7 +87,7 @@ public class LearningService {
     Course course = requireCourse(courseId);
     enrollmentRepository.findByUserAndCourse(userId, courseId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Please enroll first"));
-    Enrollment enrollment = enrollmentRepository.updateProgress(userId, courseId, request.progressPercent());
+    Enrollment enrollment = enrollmentRepository.updateProgress(userId, courseId, request.progressPercent());`n    if (request.progressPercent() >= 100) { creditService.awardCredits(userId, "course_complete", "完成课程学习"); }
     return toSummary(course, enrollment);
   }
 
@@ -143,3 +143,4 @@ public class LearningService {
         enrollment != null);
   }
 }
+
