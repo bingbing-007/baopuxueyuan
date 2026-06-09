@@ -1,20 +1,19 @@
 ﻿<script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
-import { BookOpen, CheckCircle2, Clock3, GraduationCap, LogIn, PlayCircle, RefreshCw, Settings, UserRound } from 'lucide-vue-next'
+import { computed, onMounted, ref } from 'vue'
+import { BookOpen, CheckCircle2, Clock3, GraduationCap, PlayCircle, RefreshCw, Settings, UserRound } from 'lucide-vue-next'
 import {
-  enrollCourse, getDashboard, listCourses, login, listPaths, type CourseSummary,
-  type DashboardResponse, type LearningPath
+  enrollCourse, getDashboard, listCourses, listPaths,
+  type CourseSummary, type DashboardResponse, type LearningPath
 } from '../api'
+import { initDingtalkAuth } from '../utils/dingtalk'
 
-type Session = { userId: number; name: string; token: string }
-const stored = localStorage.getItem('baopu-session')
-const session = ref<Session | null>(stored ? JSON.parse(stored) : null)
+const session = ref<{ userId: number; name: string; token: string } | null>(null)
+const authLoading = ref(true)
 const courses = ref<CourseSummary[]>([])
 const paths = ref<LearningPath[]>([])
 const dashboard = ref<DashboardResponse | null>(null)
 const loading = ref(false)
 const error = ref('')
-const loginForm = reactive({ dingtalkUserId: 'demo-user', name: '演示学员', mobile: '' })
 
 const enrolledCourses = computed(() => dashboard.value?.courses ?? courses.value.filter(c => c.enrolled))
 
@@ -28,17 +27,6 @@ async function loadData() {
   } catch (e: any) { error.value = e.message } finally { loading.value = false }
 }
 
-async function submitLogin() {
-  loading.value = true; error.value = ''
-  try {
-    const r = await login(loginForm)
-    session.value = r; localStorage.setItem('baopu-session', JSON.stringify(r))
-    await loadData()
-  } catch (e: any) { error.value = e.message } finally { loading.value = false }
-}
-
-function logout() { session.value = null; dashboard.value = null; localStorage.removeItem('baopu-session'); loadData() }
-
 async function enroll(c: CourseSummary) {
   if (!session.value) { error.value = '请先登录'; return }
   await enrollCourse(c.id); await loadData()
@@ -50,7 +38,29 @@ async function addProgress(c: CourseSummary, step: number) {
   await loadData()
 }
 
-onMounted(loadData)
+onMounted(async () => {
+  const stored = localStorage.getItem('baopu-session')
+  if (stored) {
+    session.value = JSON.parse(stored)
+    authLoading.value = false
+    await loadData()
+    return
+  }
+  try {
+    const result = await initDingtalkAuth()
+    if (result) {
+      session.value = result
+      authLoading.value = false
+      await loadData()
+    } else {
+      authLoading.value = false
+      error.value = '请在钉钉客户端内打开'
+    }
+  } catch {
+    authLoading.value = false
+    error.value = '登录失败，请重试'
+  }
+})
 </script>
 
 <template>
@@ -60,22 +70,17 @@ onMounted(loadData)
       <div class="top-actions">
         <button class="icon-button" @click="$router.push('/admin')" title="管理后台"><Settings :size="18" /></button>
         <button class="icon-button" :disabled="loading" @click="loadData"><RefreshCw :size="18" /></button>
-        <button v-if="session" class="ghost-button" @click="logout"><UserRound :size="18" />{{ session.name }}</button>
+        <span v-if="session" class="ghost-button"><UserRound :size="18" />{{ session.name }}</span>
       </div>
     </section>
 
-    <section class="workspace">
+    <section class="workspace" v-if="!authLoading">
       <aside class="side-panel">
-        <div v-if="!session" class="login-panel">
-          <h1>登录学习门户</h1>
-          <form @submit.prevent="submitLogin">
-            <label>钉钉用户 ID<input v-model="loginForm.dingtalkUserId" required maxlength="64" /></label>
-            <label>姓名<input v-model="loginForm.name" required maxlength="100" /></label>
-            <label>手机号<input v-model="loginForm.mobile" maxlength="30" /></label>
-            <button class="primary-button" type="submit" :disabled="loading"><LogIn :size="18" />进入学习</button>
-          </form>
+        <div v-if="error" class="login-panel">
+          <h1>{{ error }}</h1>
+          <p style="color:#667067">请通过钉钉工作台访问抱朴学院</p>
         </div>
-        <div v-else class="dashboard-panel">
+        <div v-else-if="session" class="dashboard-panel">
           <span class="eyebrow">学习看板</span><h1>{{ session.name }}</h1>
           <div class="stat-grid">
             <div><strong>{{ dashboard?.enrolledCount ?? 0 }}</strong><span>已报名</span></div>
@@ -93,11 +98,9 @@ onMounted(loadData)
       </aside>
 
       <section class="content-area">
-        <div v-if="error" class="notice">{{ error }}</div>
-
         <div class="section-heading"><div><span class="eyebrow">学习地图</span><h2>推荐学习路径</h2></div></div>
         <div class="path-list">
-          <div v-for="p in paths" :key="p.id" class="path-card">
+          <div v-for="p in paths" :key="p.id" class="path-card" @click="$router.push('/paths/' + p.id)">
             <strong>{{ p.title }}</strong><span>{{ p.category }}</span>
             <p>{{ p.description }}</p>
           </div>
@@ -126,12 +129,16 @@ onMounted(loadData)
         </div>
       </section>
     </section>
+
+    <section class="workspace" v-else style="justify-content:center;padding:60px;text-align:center">
+      <p>正在验证钉钉身份…</p>
+    </section>
   </main>
 </template>
 
 <style scoped>
 .path-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 8px; }
-.path-card { padding: 18px; background: #fff; border: 1px solid #dedbd0; border-radius: 8px; }
+.path-card { padding: 18px; background: #fff; border: 1px solid #dedbd0; border-radius: 8px; cursor: pointer; }
 .path-card strong { display: block; font-size: 16px; }
 .path-card span { font-size: 12px; color: #176b52; }
 .path-card p { margin-top: 8px; color: #59635c; font-size: 14px; }
