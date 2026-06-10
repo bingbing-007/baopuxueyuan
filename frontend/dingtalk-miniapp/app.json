@@ -33,11 +33,7 @@
       {
         "pagePath": "pages/courses/courses",
         "name": "课程",
-        "icon": "icon/courses.png",
-        "activeIcon": "icon/courses-active.png"
-      },
-      {
-        "pagePath": "pages/learning/learning",
+        "icon": "icon/learning.png","activeIcon": "icon/learning-active.png"},{"pagePath": "pages/learning/learning",
         "name": "学习",
         "icon": "icon/courses.png",
         "activeIcon": "icon/courses-active.png"
@@ -51,3 +47,4 @@
     ]
   }
 }
+
