@@ -10,7 +10,7 @@ spring:
         - id: learning-service
           uri: ${LEARNING_SERVICE_URL:http://localhost:8080}
           predicates:
-            - Path=/api/courses/**,/api/me/**,/api/exams/**,/api/auth/**
+            - Path=/api/courses/**,/api/me/**,/api/exams/**,/api/auth/**,/api/paths/**,/api/knowledge/**,/api/credits/**,/api/files/**,/api/analytics/**
         - id: iam-service
           uri: ${IAM_SERVICE_URL:http://localhost:8081}
           predicates:
@@ -36,3 +36,5 @@ management:
 baopu:
   jwt:
     secret: ${BAOPU_JWT_SECRET:baopu-learning-platform-jwt-secret-key-2026-min-256-bits!!}
+
+

@@ -2,7 +2,7 @@
 var auth = require("./utils/auth");
 
 App({
-  globalData: { userInfo: null, userId: null, token: null, apiBase: "http://10.0.2.2:8080" },
+  globalData: { userInfo: null, userId: null, token: null, apiBase: "http://10.0.2.2:8000" },
   onLaunch: function () {
     try {
       var c = dd.getStorageSync({ key: "session" });
@@ -24,3 +24,4 @@ App({
     });
   }
 });
+

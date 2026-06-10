@@ -59,3 +59,4 @@ public class JwtAuthGatewayFilter implements GlobalFilter, Ordered {
     return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
   }
 }
+

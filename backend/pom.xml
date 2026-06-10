@@ -8,9 +8,7 @@
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <modules>
-    <module>baopu-common</module>
-    <module>baopu-gateway</module>
+  <modules>    <module>baopu-gateway</module>
     <module>baopu-iam-service</module>
     <module>baopu-dingtalk-service</module>
     <module>baopu-learning-service</module>
@@ -56,4 +54,5 @@
     </pluginManagement>
   </build>
 </project>
+
 
